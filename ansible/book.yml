@@ -8,11 +8,28 @@
         name: docker.io
         state: present
 
+    - name: Install Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+        update_cache: yes
+
     - name: Build Docker image for ffmpeg
       docker_image:
         name: ffmpeg_stream_processor
         path: ../docker
         state: present
+
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create directory for FFmpeg output
+      file:
+        path: /usr/share/nginx/html
+        state: directory
+        mode: '0755'
 
     - name: Run Docker container for ffmpeg
       docker_container:
@@ -31,6 +48,6 @@
 
     - name: Restart NGINX
       service:
-        name: nginx  # Confirm this is the correct service name on your host
+        name: nginx
         state: restarted
 
