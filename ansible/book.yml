@@ -31,16 +31,6 @@
         state: directory
         mode: '0755'
 
-    - name: Run Docker container for ffmpeg
-      docker_container:
-        name: ffmpeg_container
-        image: ffmpeg_stream_processor
-        ports:
-          - "80:80"
-        volumes:
-          - /usr/share/nginx/html:/usr/share/nginx/html
-        state: started
-
     - name: Copy NGINX configuration file
       copy:
         src: ../nginx/nginx.conf
@@ -50,4 +40,14 @@
       service:
         name: nginx
         state: restarted
+
+    - name: Run Docker container for ffmpeg
+      docker_container:
+        name: ffmpeg_container
+        image: ffmpeg_stream_processor
+        ports:
+          - "8081:80"  # Map host port 8081 to container port 80
+        volumes:
+          - /usr/share/nginx/html:/usr/share/nginx/html
+        state: started
 
