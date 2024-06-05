@@ -36,7 +36,7 @@
         name: ffmpeg_container
         image: ffmpeg_stream_processor
         ports:
-          - "8080:8080"
+          - "80:80"
         volumes:
           - /usr/share/nginx/html:/usr/share/nginx/html
         state: started
