@@ -1,0 +1,36 @@
+---
+- name: Setup Stream Web Server
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Build Docker image for ffmpeg
+      docker_image:
+        name: ffmpeg_stream_processor
+        path: ../docker
+        state: present
+
+    - name: Run Docker container for ffmpeg
+      docker_container:
+        name: ffmpeg_container
+        image: ffmpeg_stream_processor
+        ports:
+          - "8080:8080"
+        volumes:
+          - /usr/share/nginx/html:/usr/share/nginx/html
+        state: started
+
+    - name: Copy NGINX configuration file
+      copy:
+        src: ../nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    - name: Restart NGINX
+      service:
+        name: nginx  # Confirm this is the correct service name on your host
+        state: restarted
+
